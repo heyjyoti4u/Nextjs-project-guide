@@ -1,18 +1,18 @@
-/* Team Build Guide — tiny static docs engine (no build step needed) */
+/* Launchpad Engineering Guide — tiny static docs engine (no build step needed) */
 (function () {
   'use strict';
 
-  // ---- Yahan apni GitHub repo ka URL daalo (optional): "Edit this page" link ke liye ----
+  // ---- Add your GitHub repository URL here to enable the "Edit this page" link ----
   var REPO_URL = ''; // e.g. 'https://github.com/your-name/team-build-guide'
 
   var GROUPS = [
-    { title: 'Shuruaat', items: [
-      { id: 'overview', num: 'Start', title: 'Overview & Roadmap', file: 'docs/00-overview.md', blurb: 'Poora plan ek nazar me' },
+    { title: 'Getting started', items: [
+      { id: 'overview', num: 'Start', title: 'Overview & Roadmap', file: 'docs/00-overview.md', blurb: 'The complete plan at a glance' },
       { id: 'team-setup', num: '0', title: 'Team & Tools Setup', file: 'docs/01-team-setup.md', blurb: 'Accounts, tools, laptop ready' }
     ]},
     { title: 'Foundation', items: [
       { id: 'repo-structure', num: '1', title: 'Repo & Project Structure', file: 'docs/02-repo-structure.md', blurb: 'Monorepo, folders, configs' },
-      { id: 'git-workflow', num: '2', title: 'Git Workflow: Branch → PR → Merge', file: 'docs/03-git-workflow.md', blurb: 'Roz ka kaam, step by step' }
+      { id: 'git-workflow', num: '2', title: 'Git Workflow: Branch → PR → Merge', file: 'docs/03-git-workflow.md', blurb: 'A practical daily workflow' }
     ]},
     { title: 'Build', items: [
       { id: 'frontend', num: '3', title: 'Next.js + Tailwind Frontend', file: 'docs/04-frontend.md', blurb: 'Pages, components, API client' },
@@ -20,7 +20,7 @@
       { id: 'database', num: '5', title: 'Supabase Database', file: 'docs/06-database.md', blurb: 'Tables, migrations, access' },
       { id: 'auth', num: '6', title: 'Firebase Authentication', file: 'docs/07-auth.md', blurb: 'Login, signup, token verify' },
       { id: 'notifications', num: '7', title: 'Firebase Notifications', file: 'docs/08-notifications.md', blurb: 'Push notifications (FCM)' },
-      { id: 'first-feature', num: '8', title: 'Pehla Full Feature (End-to-End)', file: 'docs/09-first-feature.md', blurb: 'DB → API → UI → PR ka example' }
+      { id: 'first-feature', num: '8', title: 'First Full Feature (End-to-End)', file: 'docs/09-first-feature.md', blurb: 'A DB → API → UI → PR example' }
     ]},
     { title: 'Quality & Release', items: [
       { id: 'testing', num: '9', title: 'Testing & Code Quality', file: 'docs/10-testing-quality.md', blurb: 'Lint, format, tests, hooks' },
@@ -113,7 +113,7 @@
     if (h1 && item) {
       var crumb = document.createElement('div');
       crumb.className = 'crumb';
-      crumb.textContent = (item.num === 'Start' ? 'Shuruaat' : (/^\d+$/.test(item.num) ? 'Phase ' + item.num : item.group));
+      crumb.textContent = (item.num === 'Start' ? 'Getting started' : (/^\d+$/.test(item.num) ? 'Phase ' + item.num : item.group));
       h1.parentNode.insertBefore(crumb, h1);
     }
 
@@ -131,7 +131,7 @@
       var m = p.innerHTML.match(/^\s*\[!(NOTE|TIP|WARNING|DANGER|MENTOR|TASK)\]\s*/i);
       if (!m) return;
       var type = m[1].toLowerCase();
-      var titles = { note: 'Note', tip: 'Tip', warning: 'Dhyan do', danger: 'Khatra', mentor: 'Mentor note', task: 'Aapka kaam' };
+      var titles = { note: 'Note', tip: 'Tip', warning: 'Watch out', danger: 'Danger', mentor: 'Mentor note', task: 'Your task' };
       p.innerHTML = p.innerHTML.replace(m[0], '');
       var box = document.createElement('div');
       box.className = 'callout ' + type;
@@ -217,7 +217,7 @@
     // Edit link
     if (REPO_URL && item) {
       var meta = document.createElement('p'); meta.className = 'meta';
-      meta.innerHTML = '<span><a href="' + REPO_URL + '/edit/main/' + item.file + '">✎ Is page ko GitHub par edit karo</a></span>';
+      meta.innerHTML = '<span><a href="' + REPO_URL + '/edit/main/' + item.file + '">✎ Edit this page on GitHub</a></span>';
       doc.appendChild(meta);
     }
 
@@ -230,7 +230,7 @@
     var hs = $$('h2, h3', doc);
     var toc = $('#toc');
     if (hs.length < 2) { toc.innerHTML = ''; return; }
-    var html = '<h5>Is page par</h5>';
+    var html = '<h5>On this page</h5>';
     hs.forEach(function (h) { html += '<a class="' + h.tagName.toLowerCase() + '" href="#" data-t="' + h.id + '">' + esc(h.textContent) + '</a>'; });
     toc.innerHTML = html;
     $$('a', toc).forEach(function (a) {
@@ -245,8 +245,8 @@
   function buildPager(id) {
     var i = FLAT.findIndex(function (x) { return x.id === id; });
     var p = FLAT[i - 1], n = FLAT[i + 1], html = '';
-    if (p) html += '<a class="prev" href="#/' + p.id + '"><small>← Pichla</small><b>' + esc(p.title) + '</b></a>';
-    if (n) html += '<a class="next" href="#/' + n.id + '"><small>Agla →</small><b>' + esc(n.title) + '</b></a>';
+    if (p) html += '<a class="prev" href="#/' + p.id + '"><small>← Previous</small><b>' + esc(p.title) + '</b></a>';
+    if (n) html += '<a class="next" href="#/' + n.id + '"><small>Next →</small><b>' + esc(n.title) + '</b></a>';
     $('#pager').innerHTML = html;
   }
 
@@ -255,13 +255,13 @@
     if (cache[id]) return Promise.resolve(cache[id]);
     var item = FLAT.filter(function (x) { return x.id === id; })[0];
     return fetch(item.file, { cache: 'no-cache' }).then(function (r) {
-      if (!r.ok) throw new Error(item.file + ' load nahi hui (HTTP ' + r.status + ')');
+      if (!r.ok) throw new Error(item.file + ' could not be loaded (HTTP ' + r.status + ')');
       return r.text();
     }).then(function (t) { cache[id] = t; countChecks(id, t); return t; });
   }
 
   function showError(err) {
-    $('#doc').innerHTML = '<div class="error-box"><b>Page load nahi ho paya.</b><p>' + esc(String(err.message || err)) +
+    $('#doc').innerHTML = '<div class="error-box"><b>This page could not be loaded.</b><p>' + esc(String(err.message || err)) +
       '</p><p>Agar aap file ko seedha double-click karke khol rahe ho (file://), to browser fetch block kar deta hai. Local preview ke liye folder me terminal kholo aur chalao:</p>' +
       '<p><code>npx serve .</code> &nbsp;ya&nbsp; <code>python -m http.server 8000</code> — phir <code>http://localhost:8000</code> kholo.</p></div>';
   }
@@ -276,7 +276,7 @@
       if (current !== id) return;
       render(id, md);
       var item = FLAT.filter(function (x) { return x.id === id; })[0];
-      document.title = item.title + ' — Team Build Guide';
+      document.title = item.title + ' — Launchpad Engineering Guide';
       window.scrollTo(0, 0);
       var act = $('.nav-link.active'); if (act && act.scrollIntoView) act.scrollIntoView({ block: 'nearest' });
     }).catch(showError);
@@ -312,7 +312,7 @@
       terms.forEach(function (t) { snip = snip.replace(new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>'); });
       html += '<a href="#/' + r.it.id + '"><b>' + esc(r.it.title) + '</b><span>…' + snip + '…</span></a>';
     });
-    box.innerHTML = html || '<div class="search-empty">Kuch nahi mila. Doosra word try karo.</div>';
+    box.innerHTML = html || '<div class="search-empty">No results. Try another search term.</div>';
     box.hidden = false;
   }
   var inp = $('#searchInput');
