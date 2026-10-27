@@ -42,7 +42,9 @@
   var current = null;  // current doc id
   // Resolve docs from the deployed site root, including GitHub Pages project paths.
   var appScript = document.querySelector('script[src$="/assets/app.js"], script[src="assets/app.js"]');
-  var siteRoot = appScript ? new URL('./', appScript.src) : new URL('./', document.baseURI);
+  // app.js lives in /assets, while Markdown files live in the project root.
+  // Moving one level up keeps this working on GitHub Pages project URLs too.
+  var siteRoot = appScript ? new URL('../', appScript.src) : new URL('./', document.baseURI);
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
