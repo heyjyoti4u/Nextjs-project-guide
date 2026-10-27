@@ -40,6 +40,9 @@
 
   var cache = {};      // id -> raw markdown
   var current = null;  // current doc id
+  // Resolve docs from the deployed site root, including GitHub Pages project paths.
+  var appScript = document.querySelector('script[src$="/assets/app.js"], script[src="assets/app.js"]');
+  var siteRoot = appScript ? new URL('./', appScript.src) : new URL('./', document.baseURI);
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
@@ -254,7 +257,7 @@
   function load(id) {
     if (cache[id]) return Promise.resolve(cache[id]);
     var item = FLAT.filter(function (x) { return x.id === id; })[0];
-    return fetch(item.file, { cache: 'no-cache' }).then(function (r) {
+    return fetch(new URL(item.file, siteRoot).href, { cache: 'no-cache' }).then(function (r) {
       if (!r.ok) throw new Error(item.file + ' could not be loaded (HTTP ' + r.status + ')');
       return r.text();
     }).then(function (t) { cache[id] = t; countChecks(id, t); return t; });
@@ -262,7 +265,7 @@
 
   function showError(err) {
     $('#doc').innerHTML = '<div class="error-box"><b>This page could not be loaded.</b><p>' + esc(String(err.message || err)) +
-      '</p><p>Agar aap file ko seedha double-click karke khol rahe ho (file://), to browser fetch block kar deta hai. Local preview ke liye folder me terminal kholo aur chalao:</p>' +
+      '</p><p>If you opened the file directly with file://, the browser blocks document requests. For a local preview, run a static server from the project folder:</p>' +
       '<p><code>npx serve .</code> &nbsp;ya&nbsp; <code>python -m http.server 8000</code> — phir <code>http://localhost:8000</code> kholo.</p></div>';
   }
 
