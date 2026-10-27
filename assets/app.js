@@ -240,8 +240,7 @@
       a.addEventListener('click', function (e) {
         e.preventDefault();
         var el = document.getElementById(a.getAttribute('data-t'));
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
+            });
     });
   }
 
@@ -281,7 +280,6 @@
       var item = FLAT.filter(function (x) { return x.id === id; })[0];
       document.title = item.title + ' — Launchpad Engineering Guide';
       window.scrollTo(0, 0);
-      var act = $('.nav-link.active'); if (act && act.scrollIntoView) act.scrollIntoView({ block: 'nearest' });
     }).catch(showError);
   }
 
