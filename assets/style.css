@@ -113,54 +113,53 @@ a:hover { text-decoration: underline; }
 .search-results mark { background: var(--amber-soft); color: var(--amber); border-radius: 3px; padding: 0 2px; }
 .search-empty { padding: 14px; color: var(--ink-3); font-size: 14px; }
 
-/* ===== Layout ===== */
+/* ===== Layout: navigation integrated into top header ===== */
 .layout {
   display: block;
-  max-width: 1440px;
+  max-width: 1200px;
   margin: 0 auto;
 }
-
-/* Horizontal top navigation below the main header */
+/* Sidebar element stays in the HTML, but visually becomes a header nav. */
 .sidebar {
-  position: sticky;
-  top: 64px;
-  z-index: 40;
-  width: 100%;
-  height: auto;
-  max-height: none;
-  overflow: visible;
-  padding: 10px 20px;
-  background: var(--bg);
-  border-right: 0;
-  border-bottom: 1px solid var(--line);
+  position: fixed;
+  top: 0;
+  left: 200px;
+  right: 425px;
+  height: 64px;
+  width: auto;
+  z-index: 51;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 }
-
-.sidebar .side-progress {
-  display: none;
-}
-
+.sidebar .side-progress { display: none; }
 .sidebar nav {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  white-space: nowrap;
 }
-
 .sidebar .nav-group {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
+  flex: none;
   margin: 0;
 }
-
-.sidebar .nav-group h4 {
-  display: none;
-}
-
+.sidebar .nav-group h4 { display: none; }
 .sidebar .nav-link {
+  flex: none;
   white-space: nowrap;
+  padding: 7px 10px;
 }
-
 .side-progress {
   max-width: 340px;
 }
@@ -193,7 +192,8 @@ a:hover { text-decoration: underline; }
 .content { padding: 36px clamp(20px, 4vw, 56px) 80px; min-width: 0; }
 .doc { max-width: 800px; margin: 0 auto; }
 .toc {
-  display: none;
+  position: sticky; top: 64px; align-self: start; height: calc(100vh - 64px); overflow-y: auto;
+  padding: 36px 16px 40px 8px; font-size: 13.5px;
 }
 .toc h5 { margin: 0 0 10px; font-size: 11.5px; letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
 .toc a { display: block; padding: 4px 0 4px 12px; border-left: 2px solid var(--line); color: var(--ink-2); line-height: 1.4; }
@@ -322,70 +322,34 @@ a:hover { text-decoration: underline; }
 
 /* ===== Responsive ===== */
 @media (max-width: 1180px) {
-  .layout {
-    display: block;
-  }
-
-  .toc {
-    display: none;
-  }
+  .toc { display: none; }
+  .sidebar { left: 175px; right: 345px; }
+  .search { width: min(290px, 28vw); }
 }
-
 @media (max-width: 860px) {
   body { font-size: 16px; }
   .menu-btn { display: none; }
   .brand-text small { display: none; }
-  .search { width: auto; flex: 1; margin-left: 4px; }
-
-  .layout {
-    display: block;
-  }
-
+  .topbar { height: 64px; }
+  .search { width: min(260px, 40vw); flex: none; margin-left: auto; }
+  /* On narrow screens nav stays horizontal, in a compact row under header. */
   .sidebar {
-    position: sticky;
     top: 64px;
-    left: auto;
-    bottom: auto;
+    left: 0;
+    right: 0;
     width: 100%;
-    height: auto;
-    max-height: none;
-    z-index: 40;
-    padding: 8px 12px;
-    overflow-x: auto;
-    overflow-y: hidden;
+    height: 48px;
+    padding: 0 12px;
     background: var(--bg);
-    transform: none;
-    border-right: 0;
     border-bottom: 1px solid var(--line);
-  }
-
-  .sidebar nav {
-    display: flex;
-    flex-wrap: nowrap;
-    width: max-content;
-    min-width: 100%;
-    gap: 6px;
-  }
-
-  .sidebar .nav-group {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 6px;
-    margin: 0;
-  }
-
-  .sidebar .nav-link {
-    white-space: nowrap;
-  }
-
-  body.nav-open .sidebar {
+    z-index: 49;
     transform: none;
   }
-
-  body.nav-open .scrim {
-    display: none;
-  }
-
+  .sidebar nav { gap: 4px; }
+  .sidebar .nav-link { padding: 6px 9px; font-size: 13px; }
+  .layout { padding-top: 48px; }
+  body.nav-open .sidebar { transform: none; }
+  body.nav-open .scrim { display: none; }
   .content { padding: 26px 16px 70px; }
   .doc h2 { font-size: 23px; margin-top: 44px; }
   .pager { grid-template-columns: 1fr; }
@@ -396,3 +360,5 @@ a:hover { text-decoration: underline; }
   .layout { display: block; }
   .content { padding: 0; }
 }
+
+/* The old sidebar grouping rules are overridden above for the top nav. */
